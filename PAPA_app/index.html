@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAPA App — Прототип</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #141619;
+      --muted: #667085;
+      --accent: #ff5a1f;
+      --accent-soft: #fff1eb;
+      --border: #e4e7ec;
+      --ok: #12b76a;
+      --sos: #d92d20;
+      --sos-soft: #fef3f2;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --amber: #b45309;
+      --amber-soft: #fef3c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(16, 24, 40, 0.08);
+    }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--card);
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff5a1f, #ff8a3d);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(255, 90, 31, 0.25);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .lang-btn.active {
+      background: var(--card);
+      color: var(--accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .motto-banner {
+      margin-top: 10px;
+      background: var(--accent-soft);
+      border: 1px solid #ffd6c4;
+      color: #9a3412;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Main Content */
+    .content {
+      flex: 1;
+      padding: 14px 14px 92px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .chip.sos-chip.active {
+      background: var(--sos);
+      border-color: var(--sos);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card.sos-card {
+      border-color: #fecdca;
+      background: #fffbfa;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #1f2937;
+      flex-shrink: 0;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge-verified {
+      font-size: 10px;
+      background: #ecfdf3;
+      color: #027a48;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .badge-sos {
+      font-size: 10px;
+      background: var(--sos-soft);
+      color: var(--sos);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .post-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .card-photo {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #f2f4f7;
+      padding-top: 10px;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 7px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-primary {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-sos {
+      border: none;
+      background: var(--sos);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .comments-box {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-item {
+      font-size: 12px;
+      line-height: 1.35;
+      background: #fff;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #eaecf0;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 6px;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 13px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    /* Market Item */
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .item-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .pill-free {
+      background: #ecfdf3;
+      color: #027a48;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .pill-swap {
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .pill-sell {
+      background: var(--amber-soft);
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* Map */
+    .map-box {
+      height: 220px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #e0f2fe, #dcfce7);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.6) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.6) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: var(--card);
+      border: 2px solid var(--accent);
+      color: var(--text);
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.14);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .pin.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Profile & Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat-box {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 76px;
+      right: max(18px, calc(50% - 212px));
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-size: 26px;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(255, 90, 31, 0.35);
+      cursor: pointer;
+      z-index: 25;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 460px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 6px 4px 10px;
+      z-index: 20;
+    }
+
+    .nav-btn {
+      border: none;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+
+    .nav-btn.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 40;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 410px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      border: none;
+      background: #f2f4f7;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 13px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .photo-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .photo-file-name {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 210px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .photo-preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .photo-preview.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <div class="logo">PAPA</div>
+          <div>
+            <div class="brand-title" id="t-appName">PAPA</div>
+            <div class="brand-sub" id="t-appSub">Сообщество • Шеринг • Карта</div>
+          </div>
+        </div>
+        <div class="lang-switcher">
+          <button class="lang-btn active" data-lang="ru" onclick="setLang('ru')">RU</button>
+          <button class="lang-btn" data-lang="kg" onclick="setLang('kg')">KG</button>
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        </div>
+      </div>
+      <div class="motto-banner">
+        <span id="t-motto">Без осуждения • Поддержка 24/7</span>
+        <span>PAPA v0.5</span>
+      </div>
+    </header>
+
+    <main class="content" id="mainContent"></main>
+
+    <button class="fab" id="fabBtn" onclick="openCreateModal('post')" title="+">+</button>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="feed" onclick="setTab('feed')">
+        <span class="nav-icon">💬</span>
+        <span id="nav-feed">Лента</span>
+      </button>
+      <button class="nav-btn" data-tab="market" onclick="setTab('market')">
+        <span class="nav-icon">🔁</span>
+        <span id="nav-market">Шеринг</span>
+      </button>
+      <button class="nav-btn" data-tab="map" onclick="setTab('map')">
+        <span class="nav-icon">📍</span>
+        <span id="nav-map">Карта</span>
+      </button>
+      <button class="nav-btn" data-tab="experts" onclick="setTab('experts')">
+        <span class="nav-icon">🩺</span>
+        <span id="nav-experts">Эксперты</span>
+      </button>
+      <button class="nav-btn" data-tab="profile" onclick="setTab('profile')">
+        <span class="nav-icon">👤</span>
+        <span id="nav-profile">Профиль</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Create Post / Market / SOS Modal -->
+  <div class="modal-backdrop" id="createModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Новая публикация</h3>
+        <button class="close-btn" onclick="closeCreateModal()">✕</button>
+      </div>
+
+      <div>
+        <label id="lbl-type">Раздел</label>
+        <select id="createType" onchange="toggleCreateFields()">
+          <option value="post" id="opt-post">Пост в ленту</option>
+          <option value="sos" id="opt-sos">🚨 Срочный вопрос SOS</option>
+          <option value="market" id="opt-market">Шеринг: Продам / Обменяю / Отдам</option>
+        </select>
+      </div>
+
+      <div id="postFields">
+        <label id="lbl-tag">Выбрать тег из списка</label>
+        <select id="postTag"></select>
+      </div>
+
+      <div id="marketFields" style="display:none;">
+        <label id="lbl-itemTitle">Название вещи</label>
+        <input class="input" id="itemTitle" placeholder="Например: Детский беговел" style="margin-bottom:8px;" />
+        <label id="lbl-itemMode">Формат в Шеринге</label>
+        <select id="itemMode" onchange="togglePriceField()" style="margin-bottom:8px;">
+          <option value="sell">Продам</option>
+          <option value="swap">Обменяю</option>
+          <option value="free">Отдам бесплатно</option>
+        </select>
+        <div id="priceFieldWrap">
+          <label id="lbl-itemPrice">Цена</label>
+          <input class="input" id="itemPrice" placeholder="Например: 1 500 сом" />
+        </div>
+      </div>
+
+      <div>
+        <label id="lbl-customTags">Свои #хештеги (сохранятся для будущих постов и фильтров)</label>
+        <input class="input" id="customTagInput" placeholder="Например: #помощьсупруге #единомышленники" />
+      </div>
+
+      <div>
+        <label id="lbl-photo">Фото</label>
+        <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoChange(event)" />
+        <div class="photo-bar">
+          <button type="button" class="btn-ghost" onclick="document.getElementById('photoInput').click()">
+            📷 Добавить фото
+          </button>
+          <span class="photo-file-name" id="photoFileName">Файл не выбран</span>
+        </div>
+        <img id="photoPreview" class="photo-preview" alt="Превью фото" />
+      </div>
+
+      <div>
+        <label id="lbl-text">Текст (можно также дописать #теги прямо в тексте)</label>
+        <textarea id="createText" placeholder="Поделись опытом, попроси совет, помоги супруге или опиши вещь..."></textarea>
+      </div>
+
+      <button class="btn-primary" style="justify-content:center; padding:11px;" onclick="submitCreate()" id="btn-publish">
+        Опубликовать
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Modal -->
+  <div class="modal-backdrop" id="chatModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="chatTitle">Чат</h3>
+        <button class="close-btn" onclick="closeChatModal()">✕</button>
+      </div>
+      <div class="comments-box" id="chatMessages" style="max-height:240px; overflow-y:auto;"></div>
+      <div class="comment-form">
+        <input class="input" id="chatInput" placeholder="Написать сообщение..." />
+        <button class="btn-primary" onclick="sendChatMessage()">→</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const I18N = {
+      ru: {
+        appSub: "Сообщество • Шеринг • Карта",
+        motto: "Без осуждения • Поддержка 24/7",
+        navFeed: "Лента",
+        navMarket: "Шеринг",
+        navMap: "Карта",
+        navExperts: "Эксперты",
+        navProfile: "Профиль",
+        verified: "Проверенный папа",
+        sosBtn: "🚨 Срочный SOS",
+        newPostBtn: "+ Написать пост",
+        allFilter: "Все",
+        replyPlaceholder: "Напиши совет или поддержку...",
+        send: "Отправить",
+        freeBadge: "Отдам даром",
+        swapBadge: "Обмен",
+        sellBadge: "Продам",
+        writeOwner: "Написать папе",
+        inviteWalk: "Предложить встречу",
+        askExpert: "Задать вопрос",
+        statPosts: "Советов",
+        statShared: "Вещей в базе",
+        statDads: "В районе",
+        chatsTitle: "Активные диалоги",
+        noChats: "Пока нет открытых диалогов. Напиши папе в шеринге или предложи встречу на карте."
+      },
+      kg: {
+        appSub: "Коомчулук • Бөлүшүү • Карта",
+        motto: "Айыптаба, түшүн! • 24/7 колдоо",
+        navFeed: "Тасма",
+        navMarket: "Бөлүшүү",
+        navMap: "Карта",
+        navExperts: "Адистер",
+        navProfile: "Профиль",
+        verified: "Ишенимдүү ата",
+        sosBtn: "🚨 Шашылыш SOS",
+        newPostBtn: "+ Пост жазуу",
+        allFilter: "Баары",
+        replyPlaceholder: "Кеңеш же колдоо жаз...",
+        send: "Жөнөтүү",
+        freeBadge: "Бекер берем",
+        swapBadge: "Алмашуу",
+        sellBadge: "Сатам",
+        writeOwner: "Атага жазуу",
+        inviteWalk: "Жолугушуу сунуштоо",
+        askExpert: "Суроо берүү",
+        statPosts: "Кеңештер",
+        statShared: "Базадагы буюм",
+        statDads: "Жакында",
+        chatsTitle: "Активдүү кат алышуулар",
+        noChats: "Азырынча ачык чаттар жок. Бөлүшүүдө же картада атага жазып көр."
+      },
+      en: {
+        appSub: "Community • Sharing • Map",
+        motto: "Zero judgment • 24/7 support",
+        navFeed: "Feed",
+        navMarket: "Sharing",
+        navMap: "Map",
+        navExperts: "Experts",
+        navProfile: "Profile",
+        verified: "Verified dad",
+        sosBtn: "🚨 Urgent SOS",
